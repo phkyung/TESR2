@@ -1,14 +1,2052 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>캐스트 빌드 아카이브</title>
+  <style>
+    :root {
+      --bg: #121018;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.1);
+      --line: rgba(255,255,255,0.12);
+      --text: #f4f1f8;
+      --sub: #c7c0d5;
+      --point: #c58cff;
+      --point-2: #7be0d6;
+      --danger: #ff7d9f;
+      --shadow: 0 18px 50px rgba(0,0,0,0.28);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: radial-gradient(circle at top left, #2a1d3f 0%, #17131f 38%, #0e0b14 100%); color: var(--text); }
+    body { min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+
+    .container {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(12, 10, 18, 0.72);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--point), var(--point-2));
+      color: #111;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .16s ease, opacity .16s ease, background .16s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--point), #a36bff);
+      color: #140d1f;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .btn-danger {
+      background: rgba(255,125,159,0.15);
+      color: #ffd1dc;
+      border: 1px solid rgba(255,125,159,0.25);
+    }
+
+    .hero {
+      padding: 42px 0 26px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-card, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(197,140,255,0.34), rgba(197,140,255,0));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      color: var(--point-2);
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(123,224,214,0.18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-desc {
+      margin: 18px 0 24px;
+      color: var(--sub);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feature-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .feature-item h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .feature-item p {
+      margin: 0;
+      color: var(--sub);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .section {
+      margin: 24px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--sub);
+    }
+
+    .filters {
+      padding: 18px;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: var(--sub);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.11);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: none;
+      transition: border-color .16s ease, background .16s ease;
+    }
+
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(197,140,255,0.65);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .field.inline-end {
+      justify-content: end;
+    }
+
+    .list-wrap {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .show-chip {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(123,224,214,0.14);
+      color: var(--point-2);
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(123,224,214,0.2);
+    }
+
+    .build-title {
+      margin: 8px 0 4px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+    }
+
+    .meta {
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e7def4;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.7;
+      color: #efeaf8;
+    }
+
+    .bullet-list {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .bullet-list li {
+      color: var(--sub);
+      line-height: 1.6;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--point);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .compare-panel {
+      padding: 20px;
+      position: sticky;
+      top: 92px;
+      height: fit-content;
+    }
+
+    .compare-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .compare-cards {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 210px;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-card .mini-meta {
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .empty {
+      color: var(--sub);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,0.14);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .today-panel {
+      padding: 22px;
+    }
+
+    .today-toolbar {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .today-intro {
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .today-intro h3 {
+      margin: 12px 0 8px;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+    }
+
+    .today-intro p {
+      margin: 0;
+      color: var(--sub);
+      line-height: 1.7;
+    }
+
+    .today-meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .today-meta-card {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .today-meta-card strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #efeaf8;
+    }
+
+    .today-meta-card span {
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .today-controls {
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .today-control-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .today-label {
+      font-size: 13px;
+      color: var(--sub);
+      font-weight: 700;
+    }
+
+    .today-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .today-chip {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--sub);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease;
+    }
+
+    .today-chip:hover {
+      transform: translateY(-1px);
+    }
+
+    .today-chip.active {
+      background: rgba(197,140,255,0.2);
+      color: #f6eefe;
+      border-color: rgba(197,140,255,0.42);
+    }
+
+    .today-action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .today-layout {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+    }
+
+    .today-recommendation,
+    .today-show-list {
+      min-height: 100%;
+    }
+
+    .today-placeholder,
+    .today-recommend-card {
+      min-height: 100%;
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .today-placeholder {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--sub);
+      line-height: 1.8;
+    }
+
+    .today-recommend-card {
+      background:
+        radial-gradient(circle at top right, rgba(123,224,214,0.10), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(197,140,255,0.14), transparent 30%),
+        rgba(255,255,255,0.045);
+    }
+
+    .today-recommend-card h3 {
+      margin: 12px 0 8px;
+      font-size: 32px;
+      letter-spacing: -0.05em;
+      line-height: 1.12;
+    }
+
+    .today-recommend-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: #efeaf8;
+    }
+
+    .today-info-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 18px 0 0;
+      list-style: none;
+    }
+
+    .today-info-list li {
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #efeaf8;
+      line-height: 1.6;
+    }
+
+    .today-reason-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(13, 10, 21, 0.42);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .today-reason-box strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--point-2);
+    }
+
+    .today-show-list {
+      display: grid;
+      gap: 12px;
+      max-height: 620px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .today-show-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      gap: 12px;
+    }
+
+    .today-show-card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .today-show-card h4 {
+      margin: 8px 0 4px;
+      font-size: 20px;
+      letter-spacing: -0.04em;
+      line-height: 1.25;
+    }
+
+    .today-score {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(123,224,214,0.14);
+      border: 1px solid rgba(123,224,214,0.22);
+      color: var(--point-2);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .footer {
+      padding: 38px 0 60px;
+      color: var(--sub);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: min(900px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      background: #171320;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+
+    .detail-block {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 14px;
+    }
+
+    .detail-block h4 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: var(--point-2);
+      letter-spacing: -0.02em;
+    }
+
+    .comments {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .comment {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .comment strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .comment p {
+      margin: 0;
+      color: var(--sub);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .muted {
+      color: var(--sub);
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .list-wrap,
+      .detail-grid,
+      .today-toolbar,
+      .today-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .today-meta-row { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .compare-panel { position: static; }
+      .filters-grid { grid-template-columns: 1fr 1fr; }
+      .filters-grid .field.inline-end { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar-inner,
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .hero-card,
+      .hero-side,
+      .filters,
+      .compare-panel,
+      .today-panel,
+      .today-intro,
+      .today-controls,
+      .today-placeholder,
+      .today-recommend-card,
+      .modal {
+        padding: 18px;
+      }
+
+      .stats,
+      .form-grid,
+      .filters-grid,
+      .today-meta-row {
+        grid-template-columns: 1fr;
+      }
+
+      .build-title { font-size: 20px; }
+      h1 { font-size: 34px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">CB</div>
+        <div>
+          <div>캐스트 빌드 아카이브</div>
+          <div style="font-size:12px;color:var(--sub);font-weight:600;">같은 대본, 다른 해석을 기록하는 커뮤니티</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-secondary" id="seedBtn">샘플 데이터 복원</button>
+        <button class="btn btn-primary" id="openAddModalBtn">빌드 등록하기</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">배우 · 캐스트 · 캐릭터 빌드</div>
+          <h1>같은 배역도<br />해석은 전혀 다를 수 있으니까.</h1>
+          <p class="hero-desc">
+            작품별·배역별로 서로 다른 캐스트의 캐릭터 빌드를 기록하고,
+            관객이 느낀 해석을 비교하고, 장면별 인상과 연기 결을 함께 이야기하는 팬 커뮤니티용 프로토타입입니다.
+          </p>
+          <div class="stats">
+            <div class="stat">
+              <strong id="statBuilds">0</strong>
+              <span>등록된 빌드</span>
+            </div>
+            <div class="stat">
+              <strong id="statShows">0</strong>
+              <span>작품 수</span>
+            </div>
+            <div class="stat">
+              <strong id="statRoles">0</strong>
+              <span>배역 수</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="hero-side hero-card">
+          <div class="feature-item">
+            <h3>작품별 정리</h3>
+            <p>작품명, 시즌, 배역, 배우 기준으로 캐릭터 해석을 축적할 수 있습니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>노선 비교</h3>
+            <p>두 캐스트를 골라 감정선, 말맛, 관계성, 장면 포인트를 나란히 비교할 수 있습니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>토론 기록</h3>
+            <p>관객 코멘트를 남겨 서로의 감상을 쌓고, 해석 차이를 안전하게 대화할 수 있습니다.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>오늘의 극 추천</h2>
+          <p>지금 상연 중인 공연 중에서 오늘 보기 좋은 작품을 먼저 고르고, 마음에 들면 아래 아카이브에서 캐스트 빌드까지 이어서 볼 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="panel today-panel">
+        <div class="today-toolbar">
+          <div class="today-intro">
+            <span class="show-chip">현재 상연작 기반 추천</span>
+            <h3>오늘 뭐 볼지 고민될 때</h3>
+            <p>
+              버튼을 누르면 오늘 날짜 기준으로 올라와 있는 뮤지컬과 연극 중 한 편을 골라드립니다.
+              장르와 분위기를 먼저 좁혀두면 추천이 조금 더 또렷해집니다.
+            </p>
+
+            <div class="today-meta-row">
+              <div class="today-meta-card">
+                <strong>오늘 날짜</strong>
+                <span id="todayDateText">-</span>
+              </div>
+              <div class="today-meta-card">
+                <strong>현재 필터</strong>
+                <span id="todayFilterText">전체 · 아무거나</span>
+              </div>
+              <div class="today-meta-card">
+                <strong>현재 상연 중</strong>
+                <span id="todayAvailableCount">0편</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="today-controls">
+            <div class="today-control-block">
+              <div class="today-label">장르</div>
+              <div class="today-chip-row" id="todayGenreFilters">
+                <button class="today-chip active" data-genre="all" type="button">전체</button>
+                <button class="today-chip" data-genre="뮤지컬" type="button">뮤지컬</button>
+                <button class="today-chip" data-genre="연극" type="button">연극</button>
+              </div>
+            </div>
+
+            <div class="today-control-block">
+              <div class="today-label">분위기</div>
+              <div class="today-chip-row" id="todayMoodFilters">
+                <button class="today-chip active" data-mood="아무거나" type="button">아무거나</button>
+                <button class="today-chip" data-mood="감성" type="button">감성</button>
+                <button class="today-chip" data-mood="강렬" type="button">강렬</button>
+                <button class="today-chip" data-mood="유머" type="button">유머</button>
+                <button class="today-chip" data-mood="묵직" type="button">묵직</button>
+              </div>
+            </div>
+
+            <div class="today-action-row">
+              <button class="btn btn-primary" id="pickTodayShowBtn" type="button">오늘의 극 추천받기</button>
+              <button class="btn btn-secondary" id="resetTodayShowBtn" type="button">필터 초기화</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="today-layout">
+          <div id="todayRecommendationArea" class="today-recommendation">
+            <div class="today-placeholder">
+              <div>
+                <strong style="display:block;font-size:20px;color:var(--text);margin-bottom:8px;">버튼을 눌러 오늘의 극을 골라보세요.</strong>
+                지금 상연 중인 작품 중에서 오늘 보기 좋은 한 편을 골라드립니다.
+              </div>
+            </div>
+          </div>
+
+          <div id="todayShowList" class="today-show-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>검색과 필터</h2>
+          <p>작품, 배역, 배우, 키워드로 원하는 빌드를 빠르게 찾아보세요.</p>
+        </div>
+      </div>
+
+      <div class="panel filters">
+        <div class="filters-grid">
+          <div class="field">
+            <label for="searchInput">통합 검색</label>
+            <input id="searchInput" type="text" placeholder="작품명, 배역, 배우, 키워드, 해석 포인트 검색" />
+          </div>
+          <div class="field">
+            <label for="showFilter">작품</label>
+            <select id="showFilter">
+              <option value="">전체 작품</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="roleFilter">배역</label>
+            <select id="roleFilter">
+              <option value="">전체 배역</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="actorFilter">배우</label>
+            <select id="actorFilter">
+              <option value="">전체 배우</option>
+            </select>
+          </div>
+          <div class="field inline-end">
+            <button class="btn btn-secondary" id="resetFilterBtn">필터 초기화</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section list-wrap">
+      <div>
+        <div class="section-head">
+          <div>
+            <h2>빌드 목록</h2>
+            <p id="resultText">0개의 빌드가 보입니다.</p>
+          </div>
+        </div>
+        <div class="cards" id="buildList"></div>
+      </div>
+
+      <aside class="panel compare-panel">
+        <div class="section-head" style="margin-bottom:10px;">
+          <div>
+            <h2 style="font-size:22px;">빌드 비교</h2>
+            <p>서로 다른 캐스트의 결을 한눈에 볼 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="compare-grid">
+          <div class="field">
+            <label for="compareA">비교 A</label>
+            <select id="compareA">
+              <option value="">첫 번째 빌드를 선택</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="compareB">비교 B</label>
+            <select id="compareB">
+              <option value="">두 번째 빌드를 선택</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="compare-cards">
+          <div class="mini-card" id="compareCardA">
+            <div class="empty">비교할 빌드를 선택하세요.</div>
+          </div>
+          <div class="mini-card" id="compareCardB">
+            <div class="empty">다른 빌드를 하나 더 선택하세요.</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    정적 HTML 프로토타입입니다. 현재 데이터는 브라우저 LocalStorage에 저장됩니다.
+  </footer>
+
+  <div class="modal-backdrop" id="addModalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+      <div class="modal-head">
+        <h3 id="addModalTitle">새 빌드 등록</h3>
+        <button class="btn btn-secondary" id="closeAddModalBtn">닫기</button>
+      </div>
+
+      <form id="buildForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="formShow">작품명</label>
+            <input id="formShow" required placeholder="예: 웃는 남자" />
+          </div>
+          <div class="field">
+            <label for="formSeason">시즌/공연 정보</label>
+            <input id="formSeason" placeholder="예: 2026 서울 / 초연 / 재연" />
+          </div>
+          <div class="field">
+            <label for="formRole">배역</label>
+            <input id="formRole" required placeholder="예: 그윈플렌" />
+          </div>
+          <div class="field">
+            <label for="formActor">배우</label>
+            <input id="formActor" required placeholder="예: 홍길동" />
+          </div>
+          <div class="field full">
+            <label for="formTitle">빌드 제목</label>
+            <input id="formTitle" required placeholder="예: 상처를 드러내지 않으려 더 밝게 웃는 그윈플렌" />
+          </div>
+          <div class="field full">
+            <label for="formSummary">한줄 요약</label>
+            <textarea id="formSummary" required placeholder="이 캐스트의 핵심 해석을 짧게 정리하세요."></textarea>
+          </div>
+          <div class="field full">
+            <label for="formKeywords">키워드</label>
+            <input id="formKeywords" placeholder="예: 체념형, 건조한 말맛, 방어적, 관계 중심" />
+          </div>
+          <div class="field full">
+            <label for="formPoints">해석 포인트</label>
+            <textarea id="formPoints" required placeholder="줄바꿈으로 입력하세요. 예:&#10;감정을 크게 폭발시키기보다 눌러 담음&#10;상대 배우와의 거리감이 초반부터 선명함"></textarea>
+          </div>
+          <div class="field full">
+            <label for="formScenes">대표 장면 / 넘버 포인트</label>
+            <textarea id="formScenes" placeholder="줄바꿈으로 입력하세요. 예:&#10;1막 법정 장면에서 조롱을 버티는 방식&#10;클라이맥스에서 무너지는 타이밍"></textarea>
+          </div>
+          <div class="field full">
+            <label for="formTone">연기 결 / 말맛 / 인상</label>
+            <textarea id="formTone" placeholder="예: 발성을 세게 밀기보다 말 끝을 남기며 흔들림을 보여줌"></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+          <button type="button" class="btn btn-secondary" id="cancelAddBtn">취소</button>
+          <button type="submit" class="btn btn-primary">등록하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="detailModalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+      <div class="modal-head">
+        <h3 id="detailModalTitle">빌드 상세</h3>
+        <button class="btn btn-secondary" id="closeDetailModalBtn">닫기</button>
+      </div>
+
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <script>
+
+    const todayShowData = [
+      {
+        title: '렘피카',
+        genre: '뮤지컬',
+        venue: '코엑스아티움 우리은행홀',
+        start: '2026-03-21',
+        end: '2026-06-21',
+        mood: ['강렬', '묵직'],
+        tags: ['실존 인물', '화가', '드라마', '대극장'],
+        oneLine: '강한 인물 서사와 시각적인 에너지가 있는 작품',
+        why: '한 편 몰입해서 보고 나오고 싶은 날 선택하기 좋은 대극장 뮤지컬입니다.'
+      },
+      {
+        title: '데스노트',
+        genre: '뮤지컬',
+        venue: '디큐브 링크아트센터',
+        start: '2025-10-14',
+        end: '2026-05-10',
+        mood: ['강렬', '묵직'],
+        tags: ['스릴', '대극장', '라이선스', '긴장감'],
+        oneLine: '긴장감과 몰입도가 확실한 작품',
+        why: '전개가 빠르고 에너지가 강해서 집중해서 보기 좋은 편입니다.'
+      },
+      {
+        title: '로미오와 줄리엣',
+        genre: '뮤지컬',
+        venue: '한전아트센터',
+        start: '2026-03-24',
+        end: '2026-05-31',
+        mood: ['감성', '강렬'],
+        tags: ['고전', '비극', '로맨스', '대극장'],
+        oneLine: '클래식한 비극의 감정선을 크게 느끼기 좋은 작품',
+        why: '익숙한 이야기와 분명한 감정선이 있어서 컨디션을 덜 타고 보기 좋습니다.'
+      },
+      {
+        title: '홍련',
+        genre: '뮤지컬',
+        venue: '충무아트센터 중극장 블랙',
+        start: '2026-02-28',
+        end: '2026-05-17',
+        mood: ['묵직', '강렬'],
+        tags: ['창작', '중극장', '미스터리', '한국적 정서'],
+        oneLine: '어두운 정서와 진한 분위기를 좋아하면 잘 맞는 창작 뮤지컬',
+        why: '분위기 자체가 또렷해서 취향에 맞으면 만족도가 높은 타입입니다.'
+      },
+      {
+        title: '팬레터',
+        genre: '뮤지컬',
+        venue: '홍익대 대학로 아트센터 대극장',
+        start: '2026-03-17',
+        end: '2026-06-07',
+        mood: ['감성', '묵직'],
+        tags: ['문학', '창작', '서정', '대학로'],
+        oneLine: '문학적 결이 있는 서정적인 뮤지컬',
+        why: '감정의 결이 섬세해 여운이 남는 작품을 찾을 때 추천하기 좋습니다.'
+      },
+      {
+        title: '전설의 리틀 농구단',
+        genre: '뮤지컬',
+        venue: '플러스씨어터',
+        start: '2026-03-10',
+        end: '2026-05-25',
+        mood: ['감성', '유머'],
+        tags: ['창작', '청춘', '따뜻함', '대학로'],
+        oneLine: '경쾌함과 따뜻함이 같이 있는 창작 뮤지컬',
+        why: '너무 무겁지 않지만 감정선은 있는 공연을 원할 때 잘 맞습니다.'
+      },
+      {
+        title: 'ROGER',
+        genre: '뮤지컬',
+        venue: 'NOL 서경스퀘어 스콘 2관',
+        start: '2026-03-05',
+        end: '2026-05-31',
+        mood: ['강렬', '감성'],
+        tags: ['대학로', '중소극장', '밀도', '인물 중심'],
+        oneLine: '배우와 가까운 거리에서 감정 밀도를 느끼기 좋은 작품',
+        why: '대학로 특유의 밀착감 있는 호흡을 좋아한다면 만족할 가능성이 큽니다.'
+      },
+      {
+        title: '긴긴밤',
+        genre: '뮤지컬',
+        venue: '링크아트센터드림 드림1관',
+        start: '2026-01-21',
+        end: '2026-04-05',
+        mood: ['감성', '묵직'],
+        tags: ['원작 기반', '우정', '여운', '창작'],
+        oneLine: '잔잔하지만 쉽게 잊히지 않는 여운형 뮤지컬',
+        why: '부드럽게 시작해서 오래 남는 감정을 원하는 날 잘 어울립니다.'
+      },
+      {
+        title: '어서 오세요, 휴남동 서점입니다',
+        genre: '뮤지컬',
+        venue: '루미나아트홀',
+        start: '2025-11-05',
+        end: '2026-04-05',
+        mood: ['감성'],
+        tags: ['힐링', '서점', '소극장', '따뜻함'],
+        oneLine: '조용한 위로와 다정한 분위기가 필요한 날 고르기 좋은 작품',
+        why: '세지 않은 톤의 공연을 보고 싶은 날 무난하게 고르기 좋습니다.'
+      },
+      {
+        title: '늘근도둑이야기',
+        genre: '연극',
+        venue: '대학로 아트포레스트 1관',
+        start: '2025-07-01',
+        end: '2026-04-05',
+        mood: ['유머'],
+        tags: ['코미디', '스테디셀러', '대학로', '가볍게'],
+        oneLine: '편하게 웃고 싶을 때 고르기 쉬운 코미디 연극',
+        why: '체력이 없고 그냥 확실히 웃고 싶은 날엔 이쪽이 안전한 선택입니다.'
+      },
+      {
+        title: '슈만',
+        genre: '연극',
+        venue: '더굿씨어터',
+        start: '2026-03-24',
+        end: '2026-03-29',
+        mood: ['묵직', '감성'],
+        tags: ['단기 공연', '인물', '대학로', '몰입형'],
+        oneLine: '상연 기간이 짧아 지금 보기 좋은 연극',
+        why: '짧게 열리는 작품이라 오늘 후보에 올려둘 가치가 큽니다.'
+      },
+      {
+        title: '2호선세입자',
+        genre: '연극',
+        venue: '대학로 바탕골 소극장',
+        start: '2026-03-23',
+        end: '2026-03-27',
+        mood: ['유머'],
+        tags: ['코미디', '현실 공감', '소극장', '막공 임박'],
+        oneLine: '지금 보기 딱 좋은 현실 공감형 코미디',
+        why: '가볍게 보기 좋고 막공이 가까워 오늘 고르기 좋은 후보입니다.'
+      },
+      {
+        title: '비밀통로 : INTERVAL',
+        genre: '연극',
+        venue: 'NOL 씨어터 대학로 우리투자증권홀',
+        start: '2026-02-13',
+        end: '2026-05-03',
+        mood: ['강렬', '묵직'],
+        tags: ['미스터리', '긴장감', '대학로', '인물극'],
+        oneLine: '설정이 강한 서사형 연극',
+        why: '기억 상실과 공간 설정이 강해서 이야기 중심 작품을 찾을 때 잘 맞습니다.'
+      },
+      {
+        title: '빵야',
+        genre: '연극',
+        venue: '두산아트센터 연강홀',
+        start: '2026-03-03',
+        end: '2026-05-24',
+        mood: ['강렬', '묵직'],
+        tags: ['관계성', '두산아트센터', '긴 러닝타임'],
+        oneLine: '제대로 몰입하고 나오고 싶을 때 고를 만한 작품',
+        why: '러닝타임이 긴 편이지만 집중해서 보기 시작하면 진하게 남는 타입입니다.'
+      },
+      {
+        title: '오펀스',
+        genre: '연극',
+        venue: '대학로 TOM 1관',
+        start: '2026-03-10',
+        end: '2026-05-31',
+        mood: ['묵직', '강렬'],
+        tags: ['심리', '관계', '대학로', '연기 중심'],
+        oneLine: '심리전과 감정 충돌을 좋아할 때 추천하기 좋은 연극',
+        why: '인물 간 긴장과 관계의 압력을 선호한다면 만족도가 높을 가능성이 큽니다.'
+      },
+      {
+        title: '히스토리 보이즈',
+        genre: '연극',
+        venue: '링크아트센터 페이코홀',
+        start: '2026-03-19',
+        end: '2026-06-07',
+        mood: ['감성', '묵직'],
+        tags: ['청춘', '성장', '대학로', '대사 맛'],
+        oneLine: '대사와 관계, 성장 서사를 좋아할 때 고르기 좋은 작품',
+        why: '캐릭터가 많은 작품을 좋아하거나 배우군을 보러 가는 재미를 중시하면 특히 잘 맞습니다.'
+      }
+    ];
+
+    const todayShowState = {
+      genre: 'all',
+      mood: '아무거나'
+    };
+
+    const STORAGE_KEY = 'cast-build-archive-data-v1';
+
+    const seedData = [
+      {
+        id: crypto.randomUUID(),
+        show: '프랑켄슈타인',
+        season: '2025 서울',
+        role: '빅터 프랑켄슈타인',
+        actor: 'A 배우',
+        title: '광기에 먼저 닿아 있는 냉정한 빅터',
+        summary: '죄책감보다 집념이 먼저 보이는 타입. 감정보다 목표에 매달리다가 뒤늦게 무너진다.',
+        keywords: ['지성형', '건조함', '자기합리화', '광기 선행'],
+        points: [
+          '초반부터 이미 선을 넘어선 사람처럼 차갑게 밀고 나감',
+          '관계 장면에서도 상대를 사랑한다기보다 자기 신념을 설득하는 느낌이 강함',
+          '후반 붕괴가 갑작스러운 폭발이라기보다 오래 숨겨온 균열처럼 보임'
+        ],
+        scenes: [
+          '생명 창조 장면에서 승리감이 공포를 압도함',
+          '헨리와의 대면에서 우정보다 경쟁심이 살아 있음'
+        ],
+        tone: '말을 끊어치며 전진하는 리듬이 강하고, 감정을 참는 대신 목표를 밀어붙이는 인상이 선명하다.',
+        comments: [
+          { name: '관객 1', text: '저도 이 캐스트는 죄책감보다 오만이 먼저 보여서 훨씬 비극적으로 느껴졌어요.' },
+          { name: '관객 2', text: '헨리와 붙을 때 미묘한 열등감이 느껴졌다는 점이 좋았습니다.' }
+        ],
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: crypto.randomUUID(),
+        show: '프랑켄슈타인',
+        season: '2025 서울',
+        role: '빅터 프랑켄슈타인',
+        actor: 'B 배우',
+        title: '죄책감에 짓눌린 인간적인 빅터',
+        summary: '비극의 중심에 선 과학자라기보다, 잘못을 감당하지 못해 흔들리는 인간으로 읽히는 빌드.',
+        keywords: ['죄책감형', '섬세함', '관계 중심', '후회'],
+        points: [
+          '창조 순간부터 기쁨과 공포가 동시에 보여 인간적인 불안이 진함',
+          '가까운 사람들과의 장면에서 정서적 의존이 또렷함',
+          '후반의 무너짐이 오열보다 소진처럼 느껴짐'
+        ],
+        scenes: [
+          '창조 직후 첫 시선에서 이미 후회가 보임',
+          '엘렌과의 장면에서 애정과 죄책감이 함께 살아 있음'
+        ],
+        tone: '말 끝이 흔들리고 호흡 사이의 침묵이 길어 감정이 스며나오는 타입이다.',
+        comments: [
+          { name: '관객 3', text: '저는 이 캐스트가 빅터를 훨씬 약한 사람으로 보여줘서 좋았어요.' }
+        ],
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: crypto.randomUUID(),
+        show: '레베카',
+        season: '2024 부산',
+        role: '댄버스 부인',
+        actor: 'C 배우',
+        title: '귀족적 품위를 유지하는 얼음 같은 댄버스',
+        summary: '감정을 크게 드러내지 않는데도 압박감이 강하다. 무너지지 않는 질서의 화신처럼 보인다.',
+        keywords: ['귀족적', '절제형', '위압감', '고전적'],
+        points: [
+          '공포를 과장하기보다 질서와 품위로 상대를 압도함',
+          '레베카에 대한 집착이 사랑이라기보다 신념처럼 보임',
+          '시선 처리와 정지 동작이 캐릭터의 권위를 만듦'
+        ],
+        scenes: [
+          '레베카 방 장면에서 거의 움직이지 않는데도 공간을 장악함'
+        ],
+        tone: '저음 중심의 또렷한 딕션과 적은 동작으로 긴장을 만든다.',
+        comments: [],
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: crypto.randomUUID(),
+        show: '레베카',
+        season: '2024 부산',
+        role: '댄버스 부인',
+        actor: 'D 배우',
+        title: '상실을 견디지 못해 균열이 보이는 댄버스',
+        summary: '권위적인 인물이라기보다, 집착과 슬픔이 피부 가까이 올라와 있는 해석.',
+        keywords: ['집착형', '상실감', '감정 노출', '불안정'],
+        points: [
+          '초반부터 감정의 결이 강하게 보여 위험성이 빠르게 읽힘',
+          '레베카에 대한 애도가 개인적 상실로 느껴짐',
+          '결말로 갈수록 무너짐의 속도가 빨라 비극성이 커짐'
+        ],
+        scenes: [
+          '레베카 방 장면에서 추억을 더듬는 손동작이 인상적임'
+        ],
+        tone: '호흡이 크게 흔들리고 정서가 겉으로 드러나는 편이라 인간적인 균열이 강하다.',
+        comments: [
+          { name: '관객 4', text: '이 해석은 무서움보다 슬픔이 먼저 보여서 인상적이었어요.' }
+        ],
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    const els = {
+      buildList: document.getElementById('buildList'),
+      resultText: document.getElementById('resultText'),
+      searchInput: document.getElementById('searchInput'),
+      showFilter: document.getElementById('showFilter'),
+      roleFilter: document.getElementById('roleFilter'),
+      actorFilter: document.getElementById('actorFilter'),
+      resetFilterBtn: document.getElementById('resetFilterBtn'),
+      compareA: document.getElementById('compareA'),
+      compareB: document.getElementById('compareB'),
+      compareCardA: document.getElementById('compareCardA'),
+      compareCardB: document.getElementById('compareCardB'),
+      statBuilds: document.getElementById('statBuilds'),
+      statShows: document.getElementById('statShows'),
+      statRoles: document.getElementById('statRoles'),
+      seedBtn: document.getElementById('seedBtn'),
+      openAddModalBtn: document.getElementById('openAddModalBtn'),
+      addModalBackdrop: document.getElementById('addModalBackdrop'),
+      closeAddModalBtn: document.getElementById('closeAddModalBtn'),
+      cancelAddBtn: document.getElementById('cancelAddBtn'),
+      buildForm: document.getElementById('buildForm'),
+      detailModalBackdrop: document.getElementById('detailModalBackdrop'),
+      closeDetailModalBtn: document.getElementById('closeDetailModalBtn'),
+      detailContent: document.getElementById('detailContent'),
+      todayDateText: document.getElementById('todayDateText'),
+      todayFilterText: document.getElementById('todayFilterText'),
+      todayAvailableCount: document.getElementById('todayAvailableCount'),
+      todayRecommendationArea: document.getElementById('todayRecommendationArea'),
+      todayShowList: document.getElementById('todayShowList'),
+      pickTodayShowBtn: document.getElementById('pickTodayShowBtn'),
+      resetTodayShowBtn: document.getElementById('resetTodayShowBtn'),
+      todayGenreButtons: [...document.querySelectorAll('#todayGenreFilters .today-chip')],
+      todayMoodButtons: [...document.querySelectorAll('#todayMoodFilters .today-chip')],
+    };
+
+    let builds = loadBuilds();
+
+    function loadBuilds() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [...seedData];
+      } catch (error) {
+        console.error(error);
+        return [...seedData];
+      }
+    }
+
+    function saveBuilds() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(builds));
+    }
+
+    function escapeHtml(value = '') {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function uniq(array) {
+      return [...new Set(array.filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko'));
+    }
+
+    function lineArray(value) {
+      return value.split('\n').map(v => v.trim()).filter(Boolean);
+    }
+
+    function openModal(backdrop) {
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(backdrop) {
+      backdrop.classList.remove('open');
+      const anyOpen = document.querySelector('.modal-backdrop.open');
+      if (!anyOpen) document.body.style.overflow = '';
+    }
+
+    function updateStats() {
+      els.statBuilds.textContent = builds.length;
+      els.statShows.textContent = uniq(builds.map(item => item.show)).length;
+      els.statRoles.textContent = uniq(builds.map(item => item.role)).length;
+    }
+
+    function populateFilters() {
+      const currentShow = els.showFilter.value;
+      const currentRole = els.roleFilter.value;
+      const currentActor = els.actorFilter.value;
+      const currentCompareA = els.compareA.value;
+      const currentCompareB = els.compareB.value;
+
+      const shows = uniq(builds.map(item => item.show));
+      const roles = uniq(builds.map(item => item.role));
+      const actors = uniq(builds.map(item => item.actor));
+
+      els.showFilter.innerHTML = '<option value="">전체 작품</option>' + shows.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join('');
+      els.roleFilter.innerHTML = '<option value="">전체 배역</option>' + roles.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join('');
+      els.actorFilter.innerHTML = '<option value="">전체 배우</option>' + actors.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join('');
+
+      const compareOptions = '<option value="">선택하세요</option>' + builds.map(item => {
+        const label = `${item.show} · ${item.role} · ${item.actor}`;
+        return `<option value="${item.id}">${escapeHtml(label)}</option>`;
+      }).join('');
+
+      els.compareA.innerHTML = compareOptions;
+      els.compareB.innerHTML = compareOptions;
+
+      els.showFilter.value = shows.includes(currentShow) ? currentShow : '';
+      els.roleFilter.value = roles.includes(currentRole) ? currentRole : '';
+      els.actorFilter.value = actors.includes(currentActor) ? currentActor : '';
+      els.compareA.value = builds.some(item => item.id === currentCompareA) ? currentCompareA : '';
+      els.compareB.value = builds.some(item => item.id === currentCompareB) ? currentCompareB : '';
+    }
+
+    function getFilteredBuilds() {
+      const keyword = els.searchInput.value.trim().toLowerCase();
+      const show = els.showFilter.value;
+      const role = els.roleFilter.value;
+      const actor = els.actorFilter.value;
+
+      return builds.filter(item => {
+        const matchesKeyword = !keyword || [
+          item.show,
+          item.season,
+          item.role,
+          item.actor,
+          item.title,
+          item.summary,
+          item.tone,
+          ...(item.keywords || []),
+          ...(item.points || []),
+          ...(item.scenes || [])
+        ].join(' ').toLowerCase().includes(keyword);
+
+        const matchesShow = !show || item.show === show;
+        const matchesRole = !role || item.role === role;
+        const matchesActor = !actor || item.actor === actor;
+
+        return matchesKeyword && matchesShow && matchesRole && matchesActor;
+      });
+    }
+
+    function renderBuilds() {
+      const filtered = getFilteredBuilds();
+      els.resultText.textContent = `${filtered.length}개의 빌드가 보입니다.`;
+
+      if (!filtered.length) {
+        els.buildList.innerHTML = `<div class="card" style="grid-column:1 / -1;"><div class="empty">검색 결과가 없습니다.<br />다른 키워드를 입력하거나 새 빌드를 등록해 보세요.</div></div>`;
+        return;
+      }
+
+      els.buildList.innerHTML = filtered.map(item => {
+        return `
+          <article class="card">
+            <div class="card-top">
+              <div>
+                <span class="show-chip">${escapeHtml(item.show)}</span>
+                <h3 class="build-title">${escapeHtml(item.title)}</h3>
+                <div class="meta">${escapeHtml(item.role)} · ${escapeHtml(item.actor)}${item.season ? ` · ${escapeHtml(item.season)}` : ''}</div>
+              </div>
+            </div>
+
+            <div class="tags">
+              ${(item.keywords || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+            </div>
+
+            <p>${escapeHtml(item.summary)}</p>
+
+            <ul class="bullet-list">
+              ${(item.points || []).slice(0, 3).map(point => `<li>${escapeHtml(point)}</li>`).join('')}
+            </ul>
+
+            <div class="card-actions">
+              <button class="btn btn-secondary" onclick="openDetail('${item.id}')">상세 보기</button>
+              <button class="btn btn-secondary" onclick="setCompare('${item.id}')">비교에 담기</button>
+              <button class="btn btn-danger" onclick="deleteBuild('${item.id}')">삭제</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderCompareCard(targetEl, build) {
+      if (!build) {
+        targetEl.innerHTML = '<div class="empty">선택된 빌드가 없습니다.</div>';
+        return;
+      }
+
+      targetEl.innerHTML = `
+        <h3>${escapeHtml(build.title)}</h3>
+        <div class="mini-meta">${escapeHtml(build.show)} · ${escapeHtml(build.role)} · ${escapeHtml(build.actor)}</div>
+        <div class="tags" style="margin-bottom:12px;">
+          ${(build.keywords || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+        </div>
+        <ul class="bullet-list">
+          ${(build.points || []).slice(0, 3).map(point => `<li>${escapeHtml(point)}</li>`).join('')}
+        </ul>
+        <p style="margin-top:12px;color:var(--sub);">${escapeHtml(build.tone || '')}</p>
+      `;
+    }
+
+    function renderCompare() {
+      const buildA = builds.find(item => item.id === els.compareA.value);
+      const buildB = builds.find(item => item.id === els.compareB.value);
+      renderCompareCard(els.compareCardA, buildA);
+      renderCompareCard(els.compareCardB, buildB);
+    }
+
+    function renderAll() {
+      updateStats();
+      populateFilters();
+      renderBuilds();
+      renderCompare();
+    }
+
+    function resetFilters() {
+      els.searchInput.value = '';
+      els.showFilter.value = '';
+      els.roleFilter.value = '';
+      els.actorFilter.value = '';
+      renderBuilds();
+    }
+
+    function clearForm() {
+      els.buildForm.reset();
+    }
+
+    function deleteBuild(id) {
+      const target = builds.find(item => item.id === id);
+      if (!target) return;
+      const ok = confirm(`'${target.title}' 빌드를 삭제할까요?`);
+      if (!ok) return;
+      builds = builds.filter(item => item.id !== id);
+      saveBuilds();
+      renderAll();
+    initTodayRecommendationSection();
+    }
+
+    function setCompare(id) {
+      if (!els.compareA.value) {
+        els.compareA.value = id;
+      } else if (!els.compareB.value || els.compareA.value === id) {
+        els.compareB.value = id;
+      } else {
+        els.compareB.value = id;
+      }
+      renderCompare();
+    }
+
+    function getTodayDateOnly() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function parseShowDate(value) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function formatTodayLabel(date) {
+      return new Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short'
+      }).format(date);
+    }
+
+    function formatShowPeriod(value) {
+      return value.replaceAll('-', '.');
+    }
+
+    function getDaysLeftForShow(show, today) {
+      return Math.floor((parseShowDate(show.end).getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    function isTodayShowAvailable(show, today) {
+      const current = today.getTime();
+      return current >= parseShowDate(show.start).getTime() && current <= parseShowDate(show.end).getTime();
+    }
+
+    function getAvailableTodayShows(today = getTodayDateOnly()) {
+      return todayShowData.filter(show => isTodayShowAvailable(show, today));
+    }
+
+    function getFilteredTodayShows(today = getTodayDateOnly()) {
+      return getAvailableTodayShows(today).filter(show => {
+        const genreMatched = todayShowState.genre === 'all' || show.genre === todayShowState.genre;
+        const moodMatched = todayShowState.mood === '아무거나' || show.mood.includes(todayShowState.mood);
+        return genreMatched && moodMatched;
+      });
+    }
+
+    function getTodayShowScore(show, today = getTodayDateOnly()) {
+      let score = 50;
+      const dayOfWeek = today.getDay();
+      const daysLeft = getDaysLeftForShow(show, today);
+
+      if (todayShowState.genre !== 'all' && show.genre === todayShowState.genre) score += 18;
+      if (todayShowState.mood !== '아무거나' && show.mood.includes(todayShowState.mood)) score += 20;
+
+      if (daysLeft <= 2) score += 18;
+      else if (daysLeft <= 7) score += 10;
+
+      if ((dayOfWeek === 5 || dayOfWeek === 6) && (show.mood.includes('강렬') || show.mood.includes('유머'))) score += 8;
+      if (dayOfWeek === 0 && show.mood.includes('감성')) score += 8;
+      if (show.tags.includes('막공 임박')) score += 10;
+      if (show.tags.includes('단기 공연')) score += 6;
+      if (show.tags.includes('힐링') && todayShowState.mood === '아무거나') score += 4;
+
+      return score;
+    }
+
+    function setTodayChipState(buttons, activeButton) {
+      buttons.forEach(button => button.classList.remove('active'));
+      activeButton.classList.add('active');
+    }
+
+    function updateTodayMeta(shows, today = getTodayDateOnly()) {
+      const genreLabel = todayShowState.genre === 'all' ? '전체' : todayShowState.genre;
+      els.todayDateText.textContent = formatTodayLabel(today);
+      els.todayFilterText.textContent = `${genreLabel} · ${todayShowState.mood}`;
+      els.todayAvailableCount.textContent = `${shows.length}편`;
+    }
+
+    function focusArchiveWithShow(showTitle) {
+      els.searchInput.value = showTitle;
+      renderBuilds();
+      document.querySelector('.filters')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderTodayRecommendation(show, today = getTodayDateOnly()) {
+      if (!show) {
+        els.todayRecommendationArea.innerHTML = `
+          <div class="today-placeholder">
+            <div>
+              <strong style="display:block;font-size:20px;color:var(--text);margin-bottom:8px;">조건에 맞는 공연이 없습니다.</strong>
+              필터를 조금 넓혀서 다시 골라보세요.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const daysLeft = getDaysLeftForShow(show, today);
+      const endLabel = daysLeft === 0 ? '오늘 종연' : daysLeft > 0 ? `종연까지 ${daysLeft}일` : '종연';
+      const escapedTitle = escapeHtml(show.title);
+      const jsTitle = show.title.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+      els.todayRecommendationArea.innerHTML = `
+        <article class="today-recommend-card">
+          <span class="show-chip">${escapeHtml(show.genre)}</span>
+          <h3>${escapedTitle}</h3>
+          <p>${escapeHtml(show.oneLine)}</p>
+
+          <ul class="today-info-list">
+            <li><strong>공연장</strong> · ${escapeHtml(show.venue)}</li>
+            <li><strong>상연 기간</strong> · ${formatShowPeriod(show.start)} ~ ${formatShowPeriod(show.end)}</li>
+            <li><strong>오늘 기준</strong> · ${escapeHtml(endLabel)}</li>
+          </ul>
+
+          <div class="today-reason-box">
+            <strong>오늘 이 작품을 고른 이유</strong>
+            <p>${escapeHtml(show.why)}</p>
+          </div>
+
+          <div class="tags" style="margin-top:16px;">
+            ${show.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+          </div>
+
+          <div class="card-actions" style="margin-top:18px;">
+            <button class="btn btn-secondary" type="button" onclick="focusArchiveWithShow('${jsTitle}')">아래 아카이브에서 검색</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTodayShowList(today = getTodayDateOnly()) {
+      const filteredShows = getFilteredTodayShows(today);
+      updateTodayMeta(filteredShows, today);
+
+      if (!filteredShows.length) {
+        els.todayShowList.innerHTML = '<div class="empty">조건에 맞는 오늘의 공연이 없습니다.</div>';
+        return;
+      }
+
+      const sortedShows = filteredShows
+        .map(show => ({ ...show, score: getTodayShowScore(show, today) }))
+        .sort((a, b) => b.score - a.score || getDaysLeftForShow(a, today) - getDaysLeftForShow(b, today));
+
+      els.todayShowList.innerHTML = sortedShows.map(show => {
+        const daysLeft = getDaysLeftForShow(show, today);
+        const endLabel = daysLeft === 0 ? '오늘 종연' : daysLeft > 0 ? `${daysLeft}일 남음` : '종연';
+        const jsTitle = show.title.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+        return `
+          <article class="today-show-card">
+            <div class="today-show-card-top">
+              <div>
+                <span class="show-chip">${escapeHtml(show.genre)}</span>
+                <h4>${escapeHtml(show.title)}</h4>
+                <div class="meta">${escapeHtml(show.venue)}</div>
+              </div>
+              <div class="today-score">추천 ${show.score}</div>
+            </div>
+
+            <p>${escapeHtml(show.oneLine)}</p>
+
+            <ul class="bullet-list">
+              <li>${formatShowPeriod(show.start)} ~ ${formatShowPeriod(show.end)}</li>
+              <li>${escapeHtml(endLabel)}</li>
+            </ul>
+
+            <div class="tags">
+              ${show.tags.slice(0, 4).map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-secondary" type="button" onclick="focusArchiveWithShow('${jsTitle}')">빌드 검색</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function pickTodayRecommendation() {
+      const today = getTodayDateOnly();
+      const filteredShows = getFilteredTodayShows(today);
+
+      if (!filteredShows.length) {
+        renderTodayRecommendation(null, today);
+        renderTodayShowList(today);
+        return;
+      }
+
+      const scoredShows = filteredShows
+        .map(show => ({ ...show, score: getTodayShowScore(show, today) }))
+        .sort((a, b) => b.score - a.score);
+
+      const topScore = scoredShows[0].score;
+      const finalCandidates = scoredShows.filter(show => show.score >= topScore - 6);
+      const pickedShow = finalCandidates[Math.floor(Math.random() * finalCandidates.length)];
+
+      renderTodayRecommendation(pickedShow, today);
+      renderTodayShowList(today);
+    }
+
+    function resetTodayRecommendationFilters() {
+      todayShowState.genre = 'all';
+      todayShowState.mood = '아무거나';
+      setTodayChipState(els.todayGenreButtons, els.todayGenreButtons[0]);
+      setTodayChipState(els.todayMoodButtons, els.todayMoodButtons[0]);
+      renderTodayShowList();
+      els.todayRecommendationArea.innerHTML = `
+        <div class="today-placeholder">
+          <div>
+            <strong style="display:block;font-size:20px;color:var(--text);margin-bottom:8px;">버튼을 눌러 오늘의 극을 골라보세요.</strong>
+            지금 상연 중인 작품 중에서 오늘 보기 좋은 한 편을 골라드립니다.
+          </div>
+        </div>
+      `;
+    }
+
+    function initTodayRecommendationSection() {
+      renderTodayShowList();
+
+      els.todayGenreButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          todayShowState.genre = button.dataset.genre;
+          setTodayChipState(els.todayGenreButtons, button);
+          renderTodayShowList();
+        });
+      });
+
+      els.todayMoodButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          todayShowState.mood = button.dataset.mood;
+          setTodayChipState(els.todayMoodButtons, button);
+          renderTodayShowList();
+        });
+      });
+
+      els.pickTodayShowBtn.addEventListener('click', pickTodayRecommendation);
+      els.resetTodayShowBtn.addEventListener('click', resetTodayRecommendationFilters);
+    }
+
+    function openDetail(id) {
+      const item = builds.find(build => build.id === id);
+      if (!item) return;
+
+      els.detailContent.innerHTML = `
+        <div class="detail-grid">
+          <div>
+            <div class="detail-block">
+              <div class="show-chip">${escapeHtml(item.show)}</div>
+              <h2 style="margin:12px 0 8px;font-size:30px;letter-spacing:-0.05em;">${escapeHtml(item.title)}</h2>
+              <div class="meta">${escapeHtml(item.role)} · ${escapeHtml(item.actor)}${item.season ? ` · ${escapeHtml(item.season)}` : ''}</div>
+              <div class="tags" style="margin-top:16px;">
+                ${(item.keywords || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="detail-block">
+              <h4>한줄 요약</h4>
+              <p>${escapeHtml(item.summary)}</p>
+            </div>
+
+            <div class="detail-block">
+              <h4>해석 포인트</h4>
+              <ul class="bullet-list">
+                ${(item.points || []).map(point => `<li>${escapeHtml(point)}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="detail-block">
+              <h4>대표 장면 / 넘버 포인트</h4>
+              ${item.scenes && item.scenes.length ? `
+                <ul class="bullet-list">
+                  ${item.scenes.map(scene => `<li>${escapeHtml(scene)}</li>`).join('')}
+                </ul>
+              ` : '<p class="muted">아직 등록된 장면 포인트가 없습니다.</p>'}
+            </div>
+
+            <div class="detail-block">
+              <h4>연기 결 / 말맛 / 인상</h4>
+              <p>${escapeHtml(item.tone || '아직 작성된 내용이 없습니다.')}</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="detail-block">
+              <h4>토론</h4>
+              <p class="muted">다른 관객의 감상을 남겨 보세요.</p>
+              <form onsubmit="submitComment(event, '${item.id}')">
+                <div class="field" style="margin-bottom:10px;">
+                  <label for="commentName">이름</label>
+                  <input id="commentName" name="commentName" placeholder="닉네임" required />
+                </div>
+                <div class="field">
+                  <label for="commentText">코멘트</label>
+                  <textarea id="commentText" name="commentText" placeholder="이 캐스트의 빌드에서 인상 깊었던 점을 적어주세요." required></textarea>
+                </div>
+                <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+                  <button class="btn btn-primary" type="submit">코멘트 등록</button>
+                </div>
+              </form>
+              <div class="comments">
+                ${item.comments && item.comments.length ? item.comments.map(comment => `
+                  <div class="comment">
+                    <strong>${escapeHtml(comment.name)}</strong>
+                    <p>${escapeHtml(comment.text)}</p>
+                  </div>
+                `).join('') : '<div class="empty">아직 등록된 코멘트가 없습니다.</div>'}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      openModal(els.detailModalBackdrop);
+    }
+
+    function submitComment(event, id) {
+      event.preventDefault();
+      const form = event.target;
+      const name = form.commentName.value.trim();
+      const text = form.commentText.value.trim();
+      if (!name || !text) return;
+
+      const item = builds.find(build => build.id === id);
+      if (!item) return;
+      item.comments = item.comments || [];
+      item.comments.unshift({ name, text });
+      saveBuilds();
+      openDetail(id);
+    }
+
+    window.openDetail = openDetail;
+    window.deleteBuild = deleteBuild;
+    window.setCompare = setCompare;
+    window.submitComment = submitComment;
+    window.focusArchiveWithShow = focusArchiveWithShow;
+
+    els.openAddModalBtn.addEventListener('click', () => openModal(els.addModalBackdrop));
+    els.closeAddModalBtn.addEventListener('click', () => closeModal(els.addModalBackdrop));
+    els.cancelAddBtn.addEventListener('click', () => closeModal(els.addModalBackdrop));
+    els.closeDetailModalBtn.addEventListener('click', () => closeModal(els.detailModalBackdrop));
+
+    els.addModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === els.addModalBackdrop) closeModal(els.addModalBackdrop);
+    });
+    els.detailModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === els.detailModalBackdrop) closeModal(els.detailModalBackdrop);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal(els.addModalBackdrop);
+        closeModal(els.detailModalBackdrop);
+      }
+    });
+
+    els.buildForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newItem = {
+        id: crypto.randomUUID(),
+        show: document.getElementById('formShow').value.trim(),
+        season: document.getElementById('formSeason').value.trim(),
+        role: document.getElementById('formRole').value.trim(),
+        actor: document.getElementById('formActor').value.trim(),
+        title: document.getElementById('formTitle').value.trim(),
+        summary: document.getElementById('formSummary').value.trim(),
+        keywords: document.getElementById('formKeywords').value.split(',').map(v => v.trim()).filter(Boolean),
+        points: lineArray(document.getElementById('formPoints').value),
+        scenes: lineArray(document.getElementById('formScenes').value),
+        tone: document.getElementById('formTone').value.trim(),
+        comments: [],
+        createdAt: new Date().toISOString()
+      };
+
+      builds.unshift(newItem);
+      saveBuilds();
+      renderAll();
+      clearForm();
+      closeModal(els.addModalBackdrop);
+    });
+
+    [els.searchInput, els.showFilter, els.roleFilter, els.actorFilter].forEach(el => {
+      el.addEventListener('input', renderBuilds);
+      el.addEventListener('change', renderBuilds);
+    });
+
+    els.resetFilterBtn.addEventListener('click', resetFilters);
+    els.compareA.addEventListener('change', renderCompare);
+    els.compareB.addEventListener('change', renderCompare);
+
+    els.seedBtn.addEventListener('click', () => {
+      const ok = confirm('현재 데이터를 지우고 샘플 데이터를 다시 불러올까요?');
+      if (!ok) return;
+      builds = [...seedData];
+      saveBuilds();
+      renderAll();
+    });
+
+    renderAll();
+  </script>
 </body>
 </html>
